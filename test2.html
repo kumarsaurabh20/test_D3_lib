@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+			<script src="d3.js"></script>
+                        <script src="jquery-1.11.0.js"></script>
+			<script>
+				function draw(data) {
+				"use strict";
+
+                            //d3.select('body')
+                            //  .append('div')
+                            //  .attr('class','chart')
+                            //  .selectAll('.bar')
+                            //  .data(data.cash)
+                            //  .enter()
+                            //  .append('div')
+                            //    .attr('class', 'bar')
+                            //    .style('width', function(d) {return d.count/100 + "px"})
+                            //    .style('outline','1px solid black')
+                            //    .text(function(d) { return Math.round(d.count) });
+                       //Since this represenation is meaning less without labels. So we create
+		/*We would like to place the name of the plaza next to each bar. As the name is neatly
+		stored in the JSON, we can simply make another div tag whose text attribute is set to
+		the name of the plaza. But to get this on the lefthand side of the bar means we will have
+		to draw it first, before the div tag that makes up bar. And, as both the label and the bar
+		share a common data element, it is useful to create one container div element per data
+		element to which we can append labels, then bars.
+		So we need to start over, first by building up a set of div tags, one per data point:
+		*/
+
+		d3.select('body')
+		  .append('div')
+		   .attr('class','chart')
+		  .selectAll('div.line')
+		  .data(data.cash)
+		  .enter()
+		  .append('div')
+		   .attr('class', 'line');
+		/*Hopefully this is starting to look a little familiar: we select the body of the page, append
+		our chart div, select all the div tags with class line (of which none exist), join the empty
+		selection with data, enter the selection, and append a div tag of class line for each
+		element of the data. Our HTML now looks like the following:
+                With this structure in place it’s simple to go ahead and append a label to each line:
+		*/
+
+
+                d3.selectAll('div.line')
+                  .append('div')
+                   .attr('class','label')
+                   .text(function(d) {return d.name} );
+
+               /*and then append a bar to each line:*/
+
+                d3.selectAll('div.line')
+                  .append('div')
+                   .attr('class','bar')
+                   .style('width', function(d) {return d.count/100 + "px"})
+                   .text(function(d) { return Math.round(d.count) });
+                   
+
+
+                            $('.chart')
+                                 .css('font-family','sans-serif')
+                                 .css('font-size', '0.7em')
+                                 .css('font-weight', 'bold');
+                            $('.label')
+                                 .css('float','left')
+                                 .css('height','3em')
+                                 .css('line-height','3em')
+                                 .css('padding-right','1em')
+                                 .css('margin-bottom','6px')
+                                 .css('width','25em')
+                                 .css('text-align','right');
+ 
+                            $('.bar')
+                                 .css('background-color','blue')
+                                 .css('color','white')
+                                 .css('height','3em')
+                                 .css('line-height','3em')
+                                 .css('padding-right','1em')
+                                 .css('margin-bottom','6px')
+                                 .css('margin-left','300px')
+                                 .css('text-align','right');				
+			}
+			</script>
+	</head>
+
+<body>
+<script>
+d3.json("plaza_traffic.json", draw);
+
+</script>
+</body>
+
+</html>
+
